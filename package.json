@@ -1,6 +1,9 @@
 {
   "name": "next-auth-login",
   "version": "0.1.0",
+  "prisma": {
+    "seed": "node src/app/libs/seed.js"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,14 +12,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.4.1",
+    "@prisma/client": "^5.17.0",
+    "bcrypt": "^5.1.1",
+    "install": "^0.13.0",
+    "next": "14.2.5",
+    "next-auth": "^4.24.7",
+    "npm": "^10.8.2",
+    "prisma": "^5.17.0",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.5"
+    "react-hot-toast": "^2.4.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
     "eslint": "^8",
-    "eslint-config-next": "14.2.5"
+    "eslint-config-next": "14.2.5",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1"
   }
 }
