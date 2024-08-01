@@ -2,11 +2,12 @@
 
 import { createUser } from "@/app/actions/signUpAction";
 import React, { useState } from "react";
+import SubmitButton from "../buttons/submitButton";
 
 const RegisterForm = () => {
   const [responses, setResponse] = useState("");
   return (
-    <div className="bg-white px-12 py-6">
+    <div className="bg-white mt-4 px-12 py-6 max-w-[350px]">
       <h1 className="font-bold text-center text-xl mb-6">Register Page</h1>
       <form
         action={async (formData) => {
@@ -45,9 +46,7 @@ const RegisterForm = () => {
           id="password"
           className="border-2 border-slate-300 p-2 rounded-lg"
         />
-        <button type="submit" className="bg-blue-300 p-2 rounded-sm">
-          Register
-        </button>
+        <SubmitButton title="Sign Up" />
         <pre className="text-sm font-bold text-red-400">{responses}</pre>
       </form>
     </div>

@@ -1,20 +1,22 @@
 "use server";
 import { z } from "zod";
+import prisma from "../libs/db";
+import { revalidatePath } from "next/cache";
 
 export const createUser = async (formData) => {
+  // USER SCHEMA UNTUK VALIDASI
   const User = z.object({
     name: z
       .string()
       .min(5, { message: "Nama harus lebih dari 5 huruf" })
-      .max(10, { message: "Nama harus kurang dari 10 huruf" }),
+      .max(30, { message: "Nama harus kurang dari 30 huruf" }),
     email: z.string().email({ message: "Email kurang tepat" }),
     password: z.string().min(5, { message: "Password terlalu pendek" }),
   });
+
+  // inisialisasi bcrypt dengan salt
   const bcrypt = require("bcrypt");
   const salt = 10;
-  //   const name = formData.get("name");
-  //   const email = formData.get("email");
-  //   const password = formData.get("password");
   const genSalt = await bcrypt.genSalt(salt);
 
   const data = {
@@ -22,10 +24,8 @@ export const createUser = async (formData) => {
     email: formData.get("email"),
     password: formData.get("password"),
   };
-  //   const hashedPassword = await bcrypt.hash(data.password, genSalt);
-  //   const match = await bcrypt.compare(formData.get("password"), data.password);
-  console.log(data);
 
+  // Validasi User Baru
   const validUser = User.safeParse(data);
   if (!validUser.success) {
     // let errors = {};
@@ -37,4 +37,15 @@ export const createUser = async (formData) => {
     console.log(errors);
     return errors;
   }
+
+  // Pembuatan user baru kedalam
+  const hashedPassword = await bcrypt.hash(data.password, genSalt);
+  const newUser = await prisma.user.create({
+    data: {
+      email: data.email,
+      name: data.name,
+      hashedPassword: hashedPassword,
+    },
+  });
+  revalidatePath("/");
 };

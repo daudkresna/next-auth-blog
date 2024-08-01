@@ -1,3 +1,4 @@
+import { bcrypt } from "@/app/libs/bcrypt";
 import prisma from "@/app/libs/db";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -7,10 +8,15 @@ export const authOptions = {
     signIn: "/signin",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       // tambahkan nilai yang ingin ditambahkan pada session bersama value dari token
       if (user) {
         return { ...token, id: user.id };
+      }
+      if (trigger === "update" && session?.name) {
+        // Note, that `session` can be any arbitrary object, remember to validate it!
+        token.name = session.name;
+        console.log("TOKEN YANG BARU DENGAN NEW NAME", token);
       }
       return token;
     },
@@ -22,6 +28,7 @@ export const authOptions = {
         user: {
           ...session.user,
           id: token.id,
+          name: token.name,
         },
       };
       return session;
@@ -60,10 +67,16 @@ export const authOptions = {
         if (!match) {
           return null;
         }
-        if (match.hashedPassword != credentials.password) {
+        // if (match.hashedPassword != credentials.password) {
+        //   return null;
+        // }
+        const valPassword = await bcrypt.compare(
+          credentials.password,
+          match.hashedPassword
+        );
+        if (!valPassword) {
           return null;
         }
-        console.log(match);
         return match;
         // const user = { id: "1", email: "rujak", password: "cingur" };
         // console.log(credentials);
