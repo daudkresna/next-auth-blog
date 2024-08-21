@@ -26,6 +26,7 @@ const page = async () => {
               description={post.description}
               postId={post.postId}
               title={post.title}
+              key={post.postId}
             />
           ))}
         </div>

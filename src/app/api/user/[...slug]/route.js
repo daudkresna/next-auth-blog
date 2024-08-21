@@ -21,7 +21,6 @@ export async function GET(request, { params }) {
       },
     },
   });
-  console.log(post);
   if (!post) {
     return NextResponse.json({
       status: 404,
