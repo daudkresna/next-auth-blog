@@ -36,7 +36,7 @@ const PostForm = ({ id }) => {
           type="text"
           name="description"
           id="description"
-          placeholder="your-email"
+          placeholder="Masukkan deskripsi post"
           className="border-2 border-slate-300 p-2 rounded-lg"
         />
         <SubmitButton title="Create Post" />
